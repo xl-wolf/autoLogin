@@ -26,8 +26,8 @@ def login():
     driver.find_element(By.XPATH, '//*[@id="to_account_login"]/a').click()
     uname_ele = driver.find_element(By.XPATH, '//*[@id="uname"]')
     pwd_ele = driver.find_element(By.XPATH, '//*[@id="passwd"]')
-    uname = 'xyja71'
-    password = '123456'
+    uname = '11111111111111'
+    password = '3333333333'
     inupt_characters(uname, uname_ele)
     inupt_characters(password, pwd_ele)
     sleep(1)
