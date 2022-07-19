@@ -55,13 +55,10 @@ def slide():
         pass
     slide_btn = driver.find_element(By.XPATH, '//*[@id="slicaptcha-block"]')
     # 截图保存为target.png
-
     slide_btn.screenshot(r''+screen_shot_dir+'target.png')
-
     # 使用js隐藏方块
     js = "document.getElementById('slicaptcha-block').style['visibility'] = 'hidden'"
     driver.execute_script(js)
-    sleep(0.5)
     bg_img = driver.find_element(By.XPATH, '//*[@id="slicaptcha-img"]')
     # 截图保存为background.png
     bg_img.screenshot(r''+screen_shot_dir+'background.png')
@@ -114,13 +111,11 @@ def screenshotCanvas():
     javascript = 'window.open("https://t.10jqka.com.cn/portfolioFront/detail.html?id=75","_blank")'
     driver.execute_script(javascript)
     driver.switch_to.window(driver.window_handles[-1])
-    sleep(15)
+    sleep(5)
     driver.set_window_size(946, 1200)
     driver.refresh()
-
     sleep(5)
-    canvas = driver.find_element(
-        By.XPATH, '//*[@id="app"]/div[2]/main/canvas')
+    canvas = driver.find_element(By.XPATH, '//*[@id="app"]/div[2]/main/canvas')
     canvas.screenshot(r''+screen_shot_dir+'canvas.png')
 
 
