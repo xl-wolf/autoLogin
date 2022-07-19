@@ -29,5 +29,7 @@ def detect_displacement(img_slider_path, image_background_path):
 
 
 if __name__ == '__main__':
-    top_left = detect_displacement("target.png", "background.png")
+    screen_shot_dir = "./screen_shot_dir/"
+    top_left = detect_displacement(
+        r''+screen_shot_dir+'target.png', r''+screen_shot_dir+'background.png')
     print(top_left)

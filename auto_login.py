@@ -1,17 +1,21 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.options import Options
 from time import sleep
 from selenium.webdriver import ActionChains
-import computeLeft
+import compute_left
 import os
+
+
+login_success = False
 
 
 screen_shot_dir = "./screen_shot_dir/"
 
-login_success = False
 
-if not os.path.exists(screen_shot_dir):
-    os.makedirs(screen_shot_dir)
+def make_image_dir():
+    if not os.path.exists(screen_shot_dir):
+        os.makedirs(screen_shot_dir)
 
 
 def inupt_characters(characters, input_ele):
@@ -20,7 +24,7 @@ def inupt_characters(characters, input_ele):
         sleep(0.05)
 
 
-def login():
+def login(uname, password):
     javascript = 'window.location.href="https://upass.10jqka.com.cn/login"'
     driver.execute_script(javascript)
     sleep(0.5)
@@ -28,8 +32,6 @@ def login():
     driver.find_element(By.XPATH, '//*[@id="to_account_login"]/a').click()
     uname_ele = driver.find_element(By.XPATH, '//*[@id="uname"]')
     pwd_ele = driver.find_element(By.XPATH, '//*[@id="passwd"]')
-    uname = '111111111111111'
-    password = '2222222222222'
     inupt_characters(uname, uname_ele)
     inupt_characters(password, pwd_ele)
     sleep(0.5)
@@ -43,8 +45,7 @@ def slide():
     try:
         user_avatar_ele = driver.find_element(
             By.XPATH, '//*[@id="header_logined"]/a/img')
-
-        if(user_avatar_ele):
+        if(bool(user_avatar_ele)):
             global login_success
             login_success = True
             print("登录成功！")
@@ -69,7 +70,7 @@ def slide():
     driver.execute_script(js)
     sleep(1)
 
-    distance = computeLeft.detect_displacement(
+    distance = compute_left.detect_displacement(
         r''+screen_shot_dir+'target.png', r''+screen_shot_dir+'background.png')
     # 点击滑块
     slider = driver.find_element(By.XPATH, '//*[@id="slider"]')
@@ -92,12 +93,51 @@ def slide():
     actionChains.release().perform()
 
 
-driver = webdriver.Chrome()
-driver.implicitly_wait(10)  # 隐式等待时间10s
-driver.maximize_window()
-login()
+def create_options(option_obj):
+    # 开发者模式 -- 就等于是手动按下F2的效果
+    option_obj.add_argument("--auto-open-devtools-for-tabs")
+    # 使用无头模式
+    option_obj.add_argument('--headless')
+    return option_obj
 
-if(login_success):
-    # 登录成功后再过5s退出浏览器
+
+def create_chromedriver():
+    options = Options()
+    res_options = create_options(options)
+    driver = webdriver.Chrome(chrome_options=res_options)
+    driver.implicitly_wait(10)  # 隐式等待时间10s
+    driver.maximize_window()
+    return driver
+
+
+def screenshotCanvas():
+    javascript = 'window.open("https://t.10jqka.com.cn/portfolioFront/detail.html?id=75","_blank")'
+    driver.execute_script(javascript)
+    driver.switch_to.window(driver.window_handles[-1])
+    sleep(15)
+    driver.set_window_size(946, 1200)
+    driver.refresh()
+
     sleep(5)
-    driver.quit()
+    canvas = driver.find_element(
+        By.XPATH, '//*[@id="app"]/div[2]/main/canvas')
+    canvas.screenshot(r''+screen_shot_dir+'canvas.png')
+
+
+driver = create_chromedriver()
+
+
+def main():
+    uname = 'xyja51'
+    password = 'sns654321'
+    login(uname, password)
+    if(login_success):
+        # 登录成功后再过60s退出浏览器
+        screenshotCanvas()
+        sleep(60)
+        driver.quit()
+
+
+if(__name__ == '__main__'):
+    make_image_dir()
+    main()
