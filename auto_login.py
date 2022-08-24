@@ -84,7 +84,7 @@ def slide():
     sleep(0.1)
     actionChains.move_by_offset(second_distance, -1).perform()
     sleep(0.2)
-    actionChains.move_by_offset(third_distance, 1).perform()
+    actionChains.move_by_offset(third_distance, 0).perform()
     sleep(1)
 
     actionChains.release().perform()
@@ -94,14 +94,14 @@ def create_options(option_obj):
     # 开发者模式 -- 就等于是手动按下F2的效果
     option_obj.add_argument("--auto-open-devtools-for-tabs")
     # 使用无头模式
-    option_obj.add_argument('--headless')
+    # option_obj.add_argument('--headless')
     return option_obj
 
 
 def create_chromedriver():
     options = Options()
     res_options = create_options(options)
-    driver = webdriver.Chrome(chrome_options=res_options)
+    driver = webdriver.Chrome(executable_path='D:\chromedriver.exe',chrome_options=res_options)
     driver.implicitly_wait(10)  # 隐式等待时间10s
     driver.maximize_window()
     return driver
