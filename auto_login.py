@@ -1,8 +1,9 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
-from time import sleep
+from selenium.webdriver.chrome.service import Service
 from selenium.webdriver import ActionChains
+from time import sleep
 import compute_left
 import os
 
@@ -101,7 +102,8 @@ def create_options(option_obj):
 def create_chromedriver():
     options = Options()
     res_options = create_options(options)
-    driver = webdriver.Chrome(executable_path='D:\chromedriver.exe',chrome_options=res_options)
+    service = Service(r"D:\chromedriver.exe")
+    driver = webdriver.Chrome(service=service,options=res_options)
     driver.implicitly_wait(10)  # 隐式等待时间10s
     driver.maximize_window()
     return driver
@@ -115,9 +117,12 @@ def screenshotCanvas():
     driver.set_window_size(946, 1200)
     driver.refresh()
     sleep(5)
-    canvas = driver.find_element(By.XPATH, '//*[@id="app"]/div[2]/main/canvas')
-    canvas.screenshot(r''+screen_shot_dir+'canvas.png')
-
+    try:
+        canvas = driver.find_element(By.XPATH, '//*[@id="app"]/div[2]/main/div/canvas')
+        canvas.screenshot(r''+screen_shot_dir+'canvas.png')
+    except:
+        print('找不到对应的canvas元素')
+        pass
 
 driver = create_chromedriver()
 
